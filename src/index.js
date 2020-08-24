@@ -5,10 +5,8 @@ import Column from './column'
 import styled from 'styled-components'
 import '@atlaskit/css-reset'
 import { DragDropContext } from 'react-beautiful-dnd'
-
-const Container = styled.div`
-  display :flex
-`
+import { Container, Row, Col } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends React.Component {
   state = initialData;
@@ -65,16 +63,16 @@ class App extends React.Component {
     // MOVING
 
     const startTaskIds = Array.from(start.taskIds);
-    startTaskIds.splice(source.index,1);
+    startTaskIds.splice(source.index, 1);
     const newStart = {
       ...start,
-      taskIds : startTaskIds
+      taskIds: startTaskIds
     }
     const finishTaskIds = Array.from(finish.taskIds);
-    finishTaskIds.splice(destination.index,9 , draggableId);
+    finishTaskIds.splice(destination.index, 9, draggableId);
     const newFinish = {
       ...finish,
-      taskIds : finishTaskIds,
+      taskIds: finishTaskIds,
     };
     const newState = {
       ...this.state,
@@ -90,23 +88,25 @@ class App extends React.Component {
 
   render() {
     return (
-
-      <DragDropContext
-        onDragStart={this.onDragStart}
-        onDragUpdate={this.onDragUpdate}
-        onDragEnd={this.onDragEnd}
-      >
-        <Container>
-          {this.state.columnOrder.map((columnId) => {
-            const column = this.state.columns[columnId];
-            console.log(column);
-            const task = column.taskIds.map(taskId => this.state.tasks[taskId])
-            console.log(task);
-
-            return <Column key={column.id} column={column} task={task} />
-          })}
-        </Container>
-      </DragDropContext>
+      <>
+        <DragDropContext
+          onDragStart={this.onDragStart}
+          onDragUpdate={this.onDragUpdate}
+          onDragEnd={this.onDragEnd}
+        >
+          <Container fluid >
+            <Row>
+              {this.state.columnOrder.map((columnId) => {
+                const column = this.state.columns[columnId];
+                const task = column.taskIds.map(taskId => this.state.tasks[taskId])
+                return <Col style={{ background: "#ececec", padding: 0, margin: "0 10px" }}>
+                  <Column key={column.id} column={column} task={task} types={column.types} />
+                </Col>
+              })}
+            </Row>
+          </Container>
+        </DragDropContext>
+      </>
     );
   }
 }
